@@ -1,0 +1,11 @@
+h1 {
+  text-align: center;
+  background-color: cornflowerblue;
+  color: white; 
+}
+
+#city-info {
+  border: solid 1px;
+  padding: 2px 4px
+ 
+}
