@@ -4,8 +4,18 @@ h1 {
   color: white; 
 }
 
+h2 {
+  font-size: 20px;
+}
+
+h3 {
+  font-size: 16px;
+}
+
 #city-info {
-  border: solid 1px;
   padding: 2px 4px
- 
+} 
+
+.search-items {
+  margin: 5px 5px
 }
