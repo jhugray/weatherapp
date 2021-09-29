@@ -22,7 +22,7 @@
       <div class="row">
         <h2>Search for a City:</h2>
         <input type="text" class="form-control search-items" id="search-bar" placeholder="San Diego">
-        <button type="button" class="btn btn-primary search-items">Search</button>
+        <button type="button" class="btn btn-primary search-items" onclick="getCurrentWeatherInfo()">Search</button>
       </div>
 
       <div class="row">
@@ -33,7 +33,11 @@
     
     <div class="col-8">
       <div class="row card" id="city-info">
-        city info
+        <h2 id="city-and-date"></h2>
+        <li id="temp"></li>
+        <li id="wind"></li>
+        <li id="humidity"></li>
+        <li id="uvindex"></li>
       </div>
       <div class="row">
         <h3>5 day forecast:</h3>

@@ -19,3 +19,7 @@ h3 {
 .search-items {
   margin: 5px 5px
 }
+
+li {
+  list-style-type: none;
+}
