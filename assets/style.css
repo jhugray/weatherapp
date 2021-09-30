@@ -15,7 +15,8 @@ h3 {
 }
 
 #city-info {
-  padding: 2px 4px
+  padding: 2px 4px;
+  margin: auto auto 12px auto;
 } 
 
 .search-items {
