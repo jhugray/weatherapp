@@ -1,7 +1,9 @@
 h1 {
   text-align: center;
   background-color: cornflowerblue;
+  background-image: linear-gradient(to right, cornflowerblue, navy);
   color: white; 
+  padding: 6px;
 }
 
 h2 {
@@ -22,4 +24,10 @@ h3 {
 
 li {
   list-style-type: none;
+}
+
+#forecastElContainer {
+  background-color: navy;
+  margin: 5px;
+  color: white;
 }

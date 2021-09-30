@@ -11,7 +11,7 @@ var date = new Date().toLocaleDateString()
 function getCurrentWeatherInfo() {
   //get input from the search to add to the API url
   var searchInput = document.querySelector("#search-bar").value;
-  console.log(searchInput);
+  console.log(searchInput);  
 
   var apiURL = "https://api.openweathermap.org/data/2.5/weather?q=" + searchInput + "&appid=1bcef183a294ce737390e54c659003f3&units=metric";
   
@@ -38,9 +38,17 @@ function getCurrentWeatherInfo() {
     .catch(function(error) {
       alert("Unable to connect to OpenWeather");
     }); 
+  var currentWeatherEl = document.getElementById("city-info");
+  currentWeatherEl.setAttribute("class", "row card");
+  var forecastHeaderEl = document.createElement("h3");
+  forecastHeaderEl.textContent = "5-Day Forecast:"; 
+  var forecastHeaderContain = document.getElementById("forecastHeader");
+  forecastHeaderContain.appendChild(forecastHeaderEl);
 
   var forecastApiURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + searchInput + "&appid=1bcef183a294ce737390e54c659003f3&units=metric";
   
+  
+
   //make API request for 5 day forecast
   fetch(forecastApiURL)
     .then(function(response) {
@@ -54,10 +62,12 @@ function getCurrentWeatherInfo() {
           // console.log(fiveDayForecast); // keep working on for loop and then populate to page **************
           // document.getElementsByClassName("fiveDayContainer").innerHTML = "Temp: " + data.list[i].main.temp + "°C";
 
+         
           var forecastEl = document.createElement("div");
           var forecastDates = new Date();
           forecastDates.setDate(forecastDates.getDate() + i);
           forecastEl.classList = "col";
+          forecastEl.setAttribute("id", "forecastElContainer");
           forecastEl.innerHTML = forecastDates.toLocaleDateString() + "<br />";    
           forecastEl.innerHTML += data.list[i].weather.icon + "<br />";
           forecastEl.innerHTML += "Temp: " + data.list[i].main.temp + "°C <br />";
@@ -66,8 +76,10 @@ function getCurrentWeatherInfo() {
           
 
           var forecastContain = document.getElementById("fiveDayContainer");
-
           forecastContain.appendChild(forecastEl);
+
+         
+          
         
 
           
