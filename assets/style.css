@@ -15,7 +15,7 @@ h3 {
 }
 
 #city-info {
-  padding: 2px 4px;
+  padding: 10px 4px;
   margin: auto auto 12px auto;
 } 
 
@@ -31,4 +31,15 @@ li {
   background-color: navy;
   margin: 5px;
   color: white;
+  text-align: left;
+  padding: 10px;
+}
+
+#uvi {
+  background-color: green;
+  color: white;
+  padding: 4px;
+  border-radius: 5px;
+
+
 }
