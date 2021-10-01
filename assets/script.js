@@ -7,12 +7,27 @@ var searchInput = ""
 var weatherContainer = document.getElementById("city-info")
 var date = new Date()
 
+function searchHistory() {
+  var searchInput = document.querySelector("#search-bar").value;
+  localStorage.setItem("savedSearch", searchInput);
+  console.log(searchInput); 
+  var pastSearchInput = localStorage.getItem("savedSearch"); 
+  var pastCity = document.createElement("div");
+  pastCity.setAttribute("class", "history-buttons search-items");
+  // pastCity.setAttribute("class", "history-buttons");
+  pastCity.innerText = pastSearchInput;
+  var pastCityContainer = document.getElementById("search-history");
+  pastCityContainer.appendChild(pastCity);
+
+
+}
+
+
 
 function getWeatherInfo() {
   //get input from the search to add to the API url
+  searchHistory();
   var searchInput = document.querySelector("#search-bar").value;
-  console.log(searchInput);  
-
   var weatherApiURL = "https://api.openweathermap.org/data/2.5/weather?q=" + searchInput + "&appid=1bcef183a294ce737390e54c659003f3&units=metric";
   fetch(weatherApiURL)
   .then(function(response) {
@@ -27,11 +42,9 @@ function getWeatherInfo() {
       document.getElementById("city-and-date").innerHTML = data.name + " " + date.toLocaleDateString();
 
       getWeatherDetails(latitude, longitude);
-
-
-      })
-    }
-  })
+      });
+    };
+  });
 }
 
 function getWeatherDetails(latitude, longitude) {
@@ -68,6 +81,7 @@ function getWeatherDetails(latitude, longitude) {
   var forecastHeaderEl = document.createElement("h3");
   forecastHeaderEl.textContent = "5-Day Forecast:"; 
   var forecastHeaderContain = document.getElementById("forecastHeader");
+  forecastHeaderContain.innerHTML = "";
   forecastHeaderContain.appendChild(forecastHeaderEl);
 
   // var forecastApiURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + searchInput + "&appid=1bcef183a294ce737390e54c659003f3&units=metric";
@@ -81,10 +95,11 @@ function getWeatherDetails(latitude, longitude) {
       if (response.ok) {
         response.json().then(function(data) {
         console.log(data);
+        var forecastContain = document.getElementById("fiveDayContainer");
+        forecastContain.innerHTML = "";
+
         for (var i = 1; i <= 5; i++) {
           console.log(data.daily[i].temp.day);
-
-         
           var forecastEl = document.createElement("div");
           var forecastDates = new Date();
           forecastDates.setDate(forecastDates.getDate() + i);
@@ -95,16 +110,9 @@ function getWeatherDetails(latitude, longitude) {
           forecastEl.innerHTML += "Temp: " + data.daily[i].temp.day + "°C <br />";
           forecastEl.innerHTML += "Wind: " + data.daily[i].wind_speed + " KPH <br />";
           forecastEl.innerHTML += "Humidity: " + data.daily[i].humidity + " % <br />"; 
-          
-
-          var forecastContain = document.getElementById("fiveDayContainer");
+        
+       
           forecastContain.appendChild(forecastEl);
-
-        
-         
-        
-        
-
           
         };
 
