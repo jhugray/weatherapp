@@ -31,8 +31,8 @@ function getWeatherInfo(searchInput) {
       var latitude = data.coord.lat;
       console.log(longitude);
       console.log(latitude);
-      document.getElementById("city-and-date").innerHTML = data.name + " " + date.toLocaleDateString();
-      getWeatherDetails(latitude, longitude);
+      document.getElementById("city-and-date").innerHTML = data.name + ' ' + date.toLocaleDateString() + '<img src="https://openweathermap.org/img/wn/' + data.weather[0].icon + '@2x.png" width=50px>';
+      getWeatherDetails(latitude, longitude); 
       });
     };
   });
@@ -100,7 +100,7 @@ function getWeatherDetails(latitude, longitude) {
             forecastEl.classList = "col";
             forecastEl.setAttribute("id", "forecastElContainer");
             forecastEl.innerHTML = forecastDates.toLocaleDateString() + "<br />";    
-            forecastEl.innerHTML += '<img src="http://openweathermap.org/img/wn/' + data.daily[i].weather[0].icon + '@2x.png" <br />';
+            forecastEl.innerHTML += '<img src="https://openweathermap.org/img/wn/' + data.daily[i].weather[0].icon + '@2x.png" <br />';
             forecastEl.innerHTML += "Temp: " + data.daily[i].temp.day + "°C <br />";
             forecastEl.innerHTML += "Wind: " + data.daily[i].wind_speed + " KPH <br />";
             forecastEl.innerHTML += "Humidity: " + data.daily[i].humidity + " % <br />"; 
