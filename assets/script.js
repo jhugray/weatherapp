@@ -1,33 +1,25 @@
-// create search feature
-// add weather api
-// add city content in top box, then add 5 day forecast
-//address errors - if city mispelled, or no text entered etc, have modal 
-// save search results to local storage, and get from LS to side bar list
 var searchInput = ""
 var weatherContainer = document.getElementById("city-info")
 var date = new Date()
 
-function searchHistory() {
-  var searchInput = document.querySelector("#search-bar").value;
-  localStorage.setItem("savedSearch", searchInput);
-  console.log(searchInput); 
-  var pastSearchInput = localStorage.getItem("savedSearch"); 
-  var pastCity = document.createElement("div");
-  pastCity.setAttribute("class", "history-buttons search-items");
-  // pastCity.setAttribute("class", "history-buttons");
-  pastCity.innerText = pastSearchInput;
-  var pastCityContainer = document.getElementById("search-history");
-  pastCityContainer.appendChild(pastCity);
 
-
+function searchBtnFunction(event) {
+  var searchInput = event.target.innerText;
+  getWeatherInfo(searchInput);
 }
 
-
-
-function getWeatherInfo() {
-  //get input from the search to add to the API url
-  searchHistory();
+function searchData() {
   var searchInput = document.querySelector("#search-bar").value;
+  //changes the case so that the first letter is capitalized and the rest lowercase
+  searchInput = searchInput.charAt(0).toUpperCase() + searchInput.slice(1).toLowerCase();
+  cityButtons(searchInput);
+  getWeatherInfo(searchInput);
+}
+
+//get latitute and longtitue to use in other API calls
+function getWeatherInfo(searchInput) {
+  loadData();
+  //get input from the search to add to the API url
   var weatherApiURL = "https://api.openweathermap.org/data/2.5/weather?q=" + searchInput + "&appid=1bcef183a294ce737390e54c659003f3&units=metric";
   fetch(weatherApiURL)
   .then(function(response) {
@@ -40,7 +32,6 @@ function getWeatherInfo() {
       console.log(longitude);
       console.log(latitude);
       document.getElementById("city-and-date").innerHTML = data.name + " " + date.toLocaleDateString();
-
       getWeatherDetails(latitude, longitude);
       });
     };
@@ -65,7 +56,14 @@ function getWeatherDetails(latitude, longitude) {
         document.getElementById("wind").innerHTML ="Wind: " + data.current.wind_speed + " KPH";
         document.getElementById("humidity").innerHTML ="Humidity: " + data.current.humidity + " %";
         var uvindex = document.createElement("span");
-        uvindex.setAttribute("id", "uvi");
+        //based on the UVI a class will be added so that the background colour reflects the conditions
+        if (data.current.uvi <= 2) {
+          uvindex.setAttribute("class", "uvi-favourable");
+        } else if (data.current.uvi <=5) {
+          uvindex.setAttribute("class", "uvi-moderate");
+        } else {
+          uvindex.setAttribute("class", "uvi-severe");
+        }
         uvindex.innerText = data.current.uvi
         document.getElementById("uvindex").innerHTML = "UV Index: " + uvindex.outerHTML ;
         });
@@ -84,39 +82,30 @@ function getWeatherDetails(latitude, longitude) {
   forecastHeaderContain.innerHTML = "";
   forecastHeaderContain.appendChild(forecastHeaderEl);
 
-  // var forecastApiURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + searchInput + "&appid=1bcef183a294ce737390e54c659003f3&units=metric";
-  
-  
-
   //make API request for 5 day forecast
   fetch(apiURL)
     .then(function(response) {
       //request was successful
       if (response.ok) {
         response.json().then(function(data) {
-        console.log(data);
-        var forecastContain = document.getElementById("fiveDayContainer");
-        forecastContain.innerHTML = "";
+          console.log(data);
+          var forecastContain = document.getElementById("fiveDayContainer");
+          forecastContain.innerHTML = "";
 
-        for (var i = 1; i <= 5; i++) {
-          console.log(data.daily[i].temp.day);
-          var forecastEl = document.createElement("div");
-          var forecastDates = new Date();
-          forecastDates.setDate(forecastDates.getDate() + i);
-          forecastEl.classList = "col";
-          forecastEl.setAttribute("id", "forecastElContainer");
-          forecastEl.innerHTML = forecastDates.toLocaleDateString() + "<br />";    
-          forecastEl.innerHTML += '<img src="http://openweathermap.org/img/wn/' + data.daily[i].weather[0].icon + '@2x.png" <br />';
-          forecastEl.innerHTML += "Temp: " + data.daily[i].temp.day + "°C <br />";
-          forecastEl.innerHTML += "Wind: " + data.daily[i].wind_speed + " KPH <br />";
-          forecastEl.innerHTML += "Humidity: " + data.daily[i].humidity + " % <br />"; 
-        
-       
-          forecastContain.appendChild(forecastEl);
-          
-        };
-
-  
+          for (var i = 1; i <= 5; i++) {
+            console.log(data.daily[i].temp.day);
+            var forecastEl = document.createElement("div");
+            var forecastDates = new Date();
+            forecastDates.setDate(forecastDates.getDate() + i);
+            forecastEl.classList = "col";
+            forecastEl.setAttribute("id", "forecastElContainer");
+            forecastEl.innerHTML = forecastDates.toLocaleDateString() + "<br />";    
+            forecastEl.innerHTML += '<img src="http://openweathermap.org/img/wn/' + data.daily[i].weather[0].icon + '@2x.png" <br />';
+            forecastEl.innerHTML += "Temp: " + data.daily[i].temp.day + "°C <br />";
+            forecastEl.innerHTML += "Wind: " + data.daily[i].wind_speed + " KPH <br />";
+            forecastEl.innerHTML += "Humidity: " + data.daily[i].humidity + " % <br />"; 
+            forecastContain.appendChild(forecastEl); 
+          };
         });
       } else {
         alert("There was a problem with your request");
@@ -126,4 +115,38 @@ function getWeatherDetails(latitude, longitude) {
       alert("Unable to connect to OpenWeather");
     }); 
 }
-  
+
+//generate buttons based on search
+function cityButtons(pastCityString) {
+  var loadData = localStorage.getItem("savedSearch");
+  var searchArr = JSON.parse(loadData) || [];
+
+//don't generate a button if one already exists
+  if (!searchArr.includes(pastCityString)) {
+    searchArr.push(pastCityString);
+    localStorage.setItem("savedSearch", JSON.stringify(searchArr));
+    console.log(searchArr);
+  } 
+}
+
+//load and make buttons based on search history in local storage
+function loadData() {
+  var pastCityContainer = document.getElementById("search-history");
+  pastCityContainer.innerHTML = "";
+  var loadData = localStorage.getItem("savedSearch");
+  var pastSearchButton = JSON.parse(loadData) || [];
+
+  for (i = 0; i < pastSearchButton.length; i++) {
+      var pastCity = document.createElement("button");
+      pastCity.setAttribute("class", "history-buttons search-items form-control");
+      pastCity.setAttribute("type", "button");
+      pastCity.addEventListener("click", searchBtnFunction);
+      pastCity.innerText = pastSearchButton[i];
+      pastCityContainer.setAttribute("class", "border-line")
+      pastCityContainer.appendChild(pastCity);
+  }
+}
+
+
+loadData();
+

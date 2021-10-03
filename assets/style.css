@@ -38,12 +38,27 @@ li {
   border-radius: 5px;
 }
 
-#uvi {
+.uvi-favourable {
   background-color: green;
   color: white;
   padding: 4px;
   border-radius: 5px;
 }
+
+.uvi-moderate {
+  background-color: yellow;
+  color: black;
+  padding: 4px;
+  border-radius: 5px;
+}
+
+.uvi-severe {
+  background-color: red;
+  color: white;
+  padding: 4px;
+  border-radius: 5px;
+}
+
 
 .history-buttons {
   background-color: grey;
@@ -53,3 +68,8 @@ li {
   text-align: center;
 }
 
+.border-line {
+  border-top: solid;
+  margin: 4px;
+  color:grey;
+}
